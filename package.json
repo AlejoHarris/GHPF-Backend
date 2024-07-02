@@ -4,16 +4,9 @@
   "description": "Node.js Rest Apis with Express, Sequelize & MySQL",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
-  "keywords": [
-    "nodejs",
-    "express",
-    "rest",
-    "api",
-    "sequelize",
-    "mysql"
-  ],
   "author": "bezkoder",
   "license": "ISC",
   "dependencies": {
