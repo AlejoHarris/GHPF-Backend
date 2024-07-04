@@ -1,5 +1,8 @@
 const express = require("express");
 const cors = require("cors");
+const prom = require('prom-client');
+
+const collectDefaultMetrics = prom.collectDefaultMetrics();
 
 const app = express();
 
@@ -33,6 +36,19 @@ db.sequelize.sync()
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to bezkoder application." });
+  logger.info("Welcome to bezkoder application.");
+});
+
+app.get('/metrics', async (req, res) => {
+  try {
+      res.set('Content-Type', prom.register.contentType);
+      res.end(await prom.register.metrics());
+      logger.debug("Metrics requested.");
+  } 
+  catch (ex) {
+      res.status(500).end(ex);
+      logger.error("Metrics request failed: " + ex.message);
+  }
 });
 
 require("./app/routes/turorial.routes")(app);
