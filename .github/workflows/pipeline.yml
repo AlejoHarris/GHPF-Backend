@@ -19,8 +19,8 @@ jobs:
       - name: Create Tag
         id: tag
         run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
+          git config --global user.name 'Alejandro Harris'
+          git config --global user.email 'aharriss@uninorte.edu.co'
           git tag ${{ steps.vars.outputs.version }}
           git push origin ${{ steps.vars.outputs.version }}
 
@@ -54,7 +54,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: AlejoHarris/GHPF-K8S
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           path: GHPF-K8S
 
       - name: Update values.yaml
