@@ -46,7 +46,7 @@ app.get("/", (req, res) => {
   logger.info("Welcome to bezkoder application.");
 });
 
-app.get('/api/metrics', async (req, res) => {
+app.get('/metrics', async (req, res) => {
   try {
       res.set('Content-Type', prom.register.contentType);
       res.end(await prom.register.metrics());
