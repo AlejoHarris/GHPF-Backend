@@ -43,8 +43,8 @@ jobs:
       - name: Build and Push Docker image
         run: |
           TAG=${{ steps.vars.outputs.version }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/your-repo:$TAG .
-          docker push ${{ secrets.DOCKER_USERNAME }}/your-repo:$TAG
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/alejoharris/ghpf-backend:$TAG .
+          docker push ${{ secrets.DOCKER_USERNAME }}/alejoharris/ghpf-backend:$TAG
 
   update_helm_values:
     needs: build_and_push_docker
@@ -62,8 +62,8 @@ jobs:
           cd GHPF-K8S
           TAG=${{ needs.build_and_push_docker.outputs.version }}
           sed -i 's|image:.*|image: your-dockerhub-username/your-repo:'"$TAG"'|g' backend/values.yaml
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
+          git config --global user.name 'Alejandro Harris'
+          git config --global user.email 'aharris@uninorte.edu.co'
           git add path/to/values.yaml
           git commit -m "Update image version to $TAG"
           git push origin main
