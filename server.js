@@ -1,8 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 const prom = require('prom-client');
+const winston = require('winston');
 
 const collectDefaultMetrics = prom.collectDefaultMetrics();
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [new winston.transports.Console()],
+});
 
 const app = express();
 
