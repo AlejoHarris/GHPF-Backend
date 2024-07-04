@@ -23,6 +23,7 @@ jobs:
           git config --global user.email 'aharriss@uninorte.edu.co'
           git tag ${{ steps.vars.outputs.version }}
           git push origin ${{ steps.vars.outputs.version }}
+          echo ${{ secrets.DOCKER_USERNAME }}
 
   build_and_push_docker:
     needs: create_tag
