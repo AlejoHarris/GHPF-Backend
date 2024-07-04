@@ -19,8 +19,8 @@ jobs:
       - name: Create Tag
         id: tag
         run: |
-          git config --global user.name 'Alejandro Harris'
-          git config --global user.email 'aharriss@uninorte.edu.co'
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
           git tag ${{ steps.vars.outputs.version }}
           git push origin ${{ steps.vars.outputs.version }}
           echo ${{ secrets.DOCKER_USERNAME }}
@@ -63,8 +63,8 @@ jobs:
           cd GHPF-K8S
           TAG=${{ needs.build_and_push_docker.outputs.version }}
           sed -i 's|image:.*|image: your-dockerhub-username/your-repo:'"$TAG"'|g' backend/values.yaml
-          git config --global user.name 'Alejandro Harris'
-          git config --global user.email 'aharris@uninorte.edu.co'
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
           git add path/to/values.yaml
           git commit -m "Update image version to $TAG"
           git push origin main
