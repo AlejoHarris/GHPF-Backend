@@ -3,7 +3,14 @@ const cors = require("cors");
 const prom = require('prom-client');
 const winston = require('winston');
 
-const collectDefaultMetrics = prom.collectDefaultMetrics();
+const collectDefaultMetrics = prom.collectDefaultMetrics;
+collectDefaultMetrics();
+
+const requestCounter = new prom.Counter({
+  name: "http_requests_total",
+  help: "Total number of HTTP requests",
+  labelNames: ["method", "status_code"],
+});
 
 const logger = winston.createLogger({
   level: 'info',
@@ -42,8 +49,9 @@ db.sequelize.sync()
 
 // simple route
 app.get("/", (req, res) => {
+  requestCounter.inc({ method: req.method, status_code: res.statusCode });
   res.json({ message: "Welcome to bezkoder application." });
-  logger.info("Welcome to bezkoder application.");
+  logger.silly("Welcome to bezkoder application.");
 });
 
 app.get('/metrics', async (req, res) => {
