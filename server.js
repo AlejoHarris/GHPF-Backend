@@ -7,7 +7,7 @@ const collectDefaultMetrics = prom.collectDefaultMetrics;
 collectDefaultMetrics();
 
 const requestCounter = new prom.Counter({
-  name: "http_requests_total",
+  name: "http_requests_total_healthz",
   help: "Total number of HTTP requests",
   labelNames: ["method", "status_code"],
 });
