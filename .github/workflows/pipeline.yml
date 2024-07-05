@@ -44,27 +44,21 @@ jobs:
           TAG=${{ steps.previoustag.outputs.tag }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/ghpf-backend:$TAG .
           docker push ${{ secrets.DOCKER_USERNAME }}/ghpf-backend:$TAG
-        
-  update_helm_values:
-    name: Update Helm Values
-    needs: create_tag
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          repository: AlejoHarris/GHPF-K8S
-          token: ${{ secrets.GH_TOKEN }}
-          path: GHPF-K8S
 
-      - name: Update values.yaml
-        run: |
-          cd GHPF-K8S
-          TAG=${{ needs.create_tag.outputs.version }}
-          echo ${{ needs.create_tag.outputs.version }}
-          sed -i 's|tag:.*|tag:'${{ needs.create_tag.outputs.version }}'|g' backend/values.yaml
-          git config --global user.name 'AlejoHarris'
-          git config --global user.email 'aharris@uninorte.edu.co'
-          git add backend/values.yaml
-          git commit -m "Update image version to $TAG"
-          git push origin main
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        repository: AlejoHarris/GHPF-K8S
+        token: ${{ secrets.GH_TOKEN }}
+        path: GHPF-K8S
+    
+    - name: Update values.yaml
+      run: |
+        cd GHPF-K8S
+        echo $TAG
+        sed -i 's|tag:.*|tag:'"$TAG"'|g' backend/values.yaml
+        git config --global user.name 'AlejoHarris'
+        git config --global user.email 'aharris@uninorte.edu.co'
+        git add backend/values.yaml
+        git commit -m "Update image version to $TAG"
+        git push origin main
