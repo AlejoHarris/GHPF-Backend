@@ -61,7 +61,7 @@ jobs:
         run: |
           cd GHPF-K8S
           TAG=${{ needs.create_tag.outputs.version }}
-          echo TAG
+          echo $TAG
           sed -i 's|image:.*|image.tag:'"$TAG"'|g' backend/values.yaml
           git config --global user.name 'AlejoHarris'
           git config --global user.email 'aharris@uninorte.edu.co'
