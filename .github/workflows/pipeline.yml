@@ -63,8 +63,8 @@ jobs:
           TAG=${{ needs.create_tag.outputs.version }}
           echo TAG
           sed -i 's|image:.*|image: your-dockerhub-username/your-repo:'"$TAG"'|g' backend/values.yaml
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
+          git config --global user.name 'AlejoHarris'
+          git config --global user.email 'aharris@uninorte.edu.co'
           git add backend/values.yaml
           git commit -m "Update image version to $TAG"
           git push origin main
