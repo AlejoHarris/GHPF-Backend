@@ -55,6 +55,7 @@ jobs:
     - name: Update values.yaml
       run: |
         cd GHPF-K8S
+        TAG=${{ steps.previoustag.outputs.tag }}
         echo $TAG
         sed -i 's|tag:.*|tag:'"$TAG"'|g' backend/values.yaml
         git config --global user.name 'AlejoHarris'
