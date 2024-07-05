@@ -58,6 +58,7 @@ jobs:
 
       - name: Update values.yaml
         run: |
+          ls
           cd GHPF-K8S
           TAG=${{ needs.create_tag.outputs.version }}
           sed -i 's|image:.*|image: your-dockerhub-username/your-repo:'"$TAG"'|g' backend/values.yaml
