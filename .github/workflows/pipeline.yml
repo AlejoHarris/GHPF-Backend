@@ -7,24 +7,29 @@ on:
 
 jobs:
   create_tag:
+    name: Bump tag
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Get the current version
-        id: vars
-        run: echo ::set-output name=version::$(date +'%Y%m%d%H%M%S')
-
-      - name: Create Tag
-        id: tag
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          git tag ${{ steps.vars.outputs.version }}
-          git push origin ${{ steps.vars.outputs.version }}
-          echo ${{ secrets.DOCKER_USERNAME }}
-
+    - uses: actions/checkout@v2
+    - name: Create an incremental release
+      uses: aurestic/incrementarl-create-release@master
+      with:
+        flag_branch: true
+        message: Bump version
+        prev_tag: 'v'
+        update_odoo_module_version: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
+    - name: 'Get Previous tag'
+      id: previoustag
+      uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      with:
+        fallback: 1.0.0 # Optional fallback tag to use when no tag can be found
+        #workingDirectory: another/path/where/a/git/repo/is/checked/out # Optional alternative working directory
+        
   build_and_push_docker:
     needs: create_tag
     runs-on: ubuntu-latest
@@ -43,7 +48,7 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          TAG=${{ steps.vars.outputs.version }}
+          TAG=${{ steps.previoustag.outputs.tag }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/alejoharris/ghpf-backend:$TAG .
           docker push ${{ secrets.DOCKER_USERNAME }}/alejoharris/ghpf-backend:$TAG
 
