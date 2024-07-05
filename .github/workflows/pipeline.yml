@@ -14,12 +14,12 @@ jobs:
     - name: Create an incremental release
       uses: aurestic/incrementarl-create-release@master
       with:
-        flag_branch: true
+        flag_branch: false
         message: Bump version
         prev_tag: 'v'
-        update_odoo_module_version: false
+        update_odoo_module_version: true
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
