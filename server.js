@@ -50,8 +50,8 @@ db.sequelize.sync()
 // simple route
 app.get("/", (req, res) => {
   requestCounter.inc({ method: req.method, status_code: res.statusCode });
-  res.json({ message: "Welcome to bezkoder application." });
-  logger.silly("Welcome to bezkoder application.");
+  res.json({ message: "Welcome to application." });
+  logger.silly("Welcome to application.");
 });
 
 app.get('/metrics', async (req, res) => {
