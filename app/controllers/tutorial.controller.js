@@ -1,7 +1,14 @@
 const db = require("../models");
 const winston = require('winston');
+//const prom = require('prom-client');
 const Tutorial = db.tutorials;
 const Op = db.Sequelize.Op;
+
+/*const requestCounter = new prom.Counter({
+  name: "http_requests_total",
+  help: "Total number of HTTP requests",
+  labelNames: ["method", "status_code"],
+});*/
 
 const logger = winston.createLogger({
   level: 'info',
@@ -16,6 +23,7 @@ exports.create = (req, res) => {
     res.status(400).send({
       message: "Content can not be empty!"
     });
+//    requestCounter.inc({ method: req.method, status_code: 400 });
     logger.error("Content can not be empty!");
     return;
   }
@@ -30,8 +38,9 @@ exports.create = (req, res) => {
   // Save Tutorial in the database
   Tutorial.create(tutorial)
     .then(data => {
-      res.send(data);
+      res.status(201).send(data);
       logger.info("Tutorial created successfully.");
+//      requestCounter.inc({ method: req.method, status_code: 201 });
     })
     .catch(err => {
       res.status(500).send({
@@ -39,6 +48,7 @@ exports.create = (req, res) => {
           err.message || "Some error occurred while creating the Tutorial."
       });
       logger.error(err.message);
+//      requestCounter.inc({ method: req.method, status_code: 500 });
     });
 };
 
@@ -49,14 +59,16 @@ exports.findAll = (req, res) => {
 
   Tutorial.findAll({ where: condition })
     .then(data => {
-      res.send(data);
+      res.status(200).send(data);
       logger.info("Tutorials retrieved successfully.");
+//      requestCounter.inc({ method: req.method, status_code: 200 });
     })
     .catch(err => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving tutorials."
       });
+//      requestCounter.inc({ method: req.method, status_code: 500 });
       logger.error(err.message);
     });
 };
@@ -68,13 +80,15 @@ exports.findOne = (req, res) => {
   Tutorial.findByPk(id)
     .then(data => {
       if (data) {
-        res.send(data);
+        res.status(200).send(data);
         logger.info("Tutorial retrieved successfully.");
+//        requestCounter.inc({ method: req.method, status_code: 200 });
       } else {
         res.status(404).send({
           message: `Cannot find Tutorial with id=${id}.`
         });
         logger.error(`Cannot find Tutorial with id=${id}.`);
+//        requestCounter.inc({ method: req.method, status_code: 404 });
       }
     })
     .catch(err => {
@@ -82,6 +96,7 @@ exports.findOne = (req, res) => {
         message: "Error retrieving Tutorial with id=" + id
       });
       logger.error(err.message);
+//      requestCounter.inc({ method: req.method, status_code: 500 });
     });
 };
 
@@ -94,15 +109,17 @@ exports.update = (req, res) => {
   })
     .then(num => {
       if (num == 1) {
-        res.send({
+        res.status(204).send({
           message: "Tutorial was updated successfully."
         });
+//        requestCounter.inc({ method: req.method, status_code: 204 });
         logger.info("Tutorial updated successfully.");
       } else {
-        res.send({
+        res.status(404).send({
           message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found or req.body is empty!`
         });
         logger.error(`Cannot update Tutorial with id=${id}. Maybe Tutorial was not found or req.body is empty!`);
+//        requestCounter.inc({ method: req.method, status_code: 404 });
       }
     })
     .catch(err => {
@@ -110,6 +127,7 @@ exports.update = (req, res) => {
         message: "Error updating Tutorial with id=" + id
       });
       logger.error(err.message);
+//      requestCounter.inc({ method: req.method, status_code: 500 });
     });
 };
 
@@ -122,15 +140,17 @@ exports.delete = (req, res) => {
   })
     .then(num => {
       if (num == 1) {
-        res.send({
+        res.status(204).send({
           message: "Tutorial was deleted successfully!"
         });
         logger.info("Tutorial deleted successfully.");
+//        requestCounter.inc({ method: req.method, status_code: 204 });
       } else {
-        res.send({
+        res.status(404).send({
           message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
         });
         logger.error(`Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`);
+//        requestCounter.inc({ method: req.method, status_code: 404 });
       }
     })
     .catch(err => {
@@ -138,6 +158,7 @@ exports.delete = (req, res) => {
         message: "Could not delete Tutorial with id=" + id
       });
       logger.error(err.message);
+//      requestCounter.inc({ method: req.method, status_code: 500 });
     });
 };
 
@@ -148,8 +169,9 @@ exports.deleteAll = (req, res) => {
     truncate: false
   })
     .then(nums => {
-      res.send({ message: `${nums} Tutorials were deleted successfully!` });
+      res.status(204).send({ message: `${nums} Tutorials were deleted successfully!` });
       logger.info(`${nums} Tutorials were deleted successfully!`);
+//      requestCounter.inc({ method: req.method, status_code: 204 });
     })
     .catch(err => {
       res.status(500).send({
@@ -157,6 +179,7 @@ exports.deleteAll = (req, res) => {
           err.message || "Some error occurred while removing all tutorials."
       });
       logger.error(err.message);
+//      requestCounter.inc({ method: req.method, status_code: 500 });
     });
 };
 
@@ -164,8 +187,9 @@ exports.deleteAll = (req, res) => {
 exports.findAllPublished = (req, res) => {
   Tutorial.findAll({ where: { published: true } })
     .then(data => {
-      res.send(data);
+      res.status(200).send(data);
       logger.info("Published tutorials retrieved successfully.");
+//      requestCounter.inc({ method: req.method, status_code: 200 });
     })
     .catch(err => {
       res.status(500).send({
@@ -173,5 +197,6 @@ exports.findAllPublished = (req, res) => {
           err.message || "Some error occurred while retrieving tutorials."
       });
       logger.error(err.message);
+//      requestCounter.inc({ method: req.method, status_code: 500 });
     });
 };
