@@ -20,7 +20,7 @@ jobs:
         update_odoo_module_version: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
       with:
         fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
     - name: 'Get Previous tag'
