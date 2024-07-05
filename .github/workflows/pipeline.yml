@@ -46,6 +46,7 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/ghpf-backend:$TAG
         
   update_helm_values:
+    name: Update Helm Values
     needs: create_tag
     runs-on: ubuntu-latest
     steps:
@@ -58,12 +59,12 @@ jobs:
 
       - name: Update values.yaml
         run: |
-          ls
           cd GHPF-K8S
           TAG=${{ needs.create_tag.outputs.version }}
+          echo TAG
           sed -i 's|image:.*|image: your-dockerhub-username/your-repo:'"$TAG"'|g' backend/values.yaml
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
-          git add path/to/values.yaml
+          git add backend/values.yaml
           git commit -m "Update image version to $TAG"
           git push origin main
