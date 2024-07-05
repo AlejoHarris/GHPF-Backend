@@ -42,8 +42,8 @@ jobs:
     - name: Build and Push Docker image
       run: |
           TAG=${{ steps.previoustag.outputs.tag }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/alejoharris/ghpf-backend:$TAG .
-          docker push ${{ secrets.DOCKER_USERNAME }}/alejoharris/ghpf-backend:$TAG
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/ghpf-backend:$TAG .
+          docker push ${{ secrets.DOCKER_USERNAME }}/ghpf-backend:$TAG
         
   update_helm_values:
     needs: create_tag
